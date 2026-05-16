@@ -33,10 +33,11 @@ func CheckHandler(c *gin.Context) {
 		return
 	}
 
-	// Limit batch size to avoid overloading the check service with too many items at once
-	const maxItems = 50
+	// Limit batch size to avoid overloading the check service with too many items at once.
+	// Raised from 50 to 100 since my use case involves bulk checking of saved links.
+	const maxItems = 100
 	if len(req.Items) > maxItems {
-		c.JSON(http.StatusBadRequest, model.NewErrorResponse(400, "items数量超过限制(最多50个)"))
+		c.JSON(http.StatusBadRequest, model.NewErrorResponse(400, "items数量超过限制(最多100个)"))
 		return
 	}
 
