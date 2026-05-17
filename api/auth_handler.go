@@ -44,6 +44,7 @@ func LoginHandler(c *gin.Context) {
 	// 验证用户名和密码
 	storedPassword, exists := config.AppConfig.AuthUsers[req.Username]
 	if !exists || storedPassword != req.Password {
+		// NOTE: intentionally using a generic message to avoid username enumeration
 		c.JSON(401, gin.H{"error": "用户名或密码错误"})
 		return
 	}
@@ -73,7 +74,7 @@ func VerifyHandler(c *gin.Context) {
 	// 如果未启用认证，直接返回有效
 	if !config.AppConfig.AuthEnabled {
 		c.JSON(200, gin.H{
-			"valid": true,
+			"valid":   true,
 			"message": "认证功能未启用",
 		})
 		return
@@ -96,5 +97,6 @@ func VerifyHandler(c *gin.Context) {
 func LogoutHandler(c *gin.Context) {
 	// JWT是无状态的，服务端不需要处理注销
 	// 客户端删除存储的token即可
+	// TODO: consider a token blocklist if revocation becomes necessary
 	c.JSON(200, gin.H{"message": "退出成功"})
 }
